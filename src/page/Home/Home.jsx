@@ -35,11 +35,13 @@ const Home = () => {
 
     // }, [user?.email])
     const { data: AllData = [], refetch } = useQuery({
-        queryKey: ['task', user?.email],
+        queryKey: ['task',user?.email],
         queryFn: async () => {
+            if(user?.email){
             const res = await axiosSecure.get(`/alltask/${user?.email}`)
-            // console.log(res.data)
+            console.log(res.data)
             return res.data;
+            }
         }
     })
 
@@ -89,7 +91,7 @@ const Home = () => {
         // console.log('data', data.task)
         axiosSecure.put(`/taskEdit/${editId}`, { title: data.task })
             .then(res => {
-                // console.log('edit', res.data)
+                console.log('edit', res.data)
                 if (res.data.modifiedCount > 0) {
                     document.getElementById('my_modal_1').close()
                     Swal.fire({
@@ -106,45 +108,20 @@ const Home = () => {
     }
 
     const handleDelete = (id) => {
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                axiosSecure.delete(`/taskDelete/${id}`)
-                    .then(res => {
-                        // console.log('delete', res.data)
-                        if (res.data.deletedCount > 0) {
-                            Swal.fire({
-                                title: "Deleted!",
-                                text: "Your file has been deleted.",
-                                icon: "success"
-                            });
-                            refetch()
-                        }
-                    })
-
+         axiosSecure.delete(`/taskDelete/${id}`)
+         .then(res=>{
+            console.log('delete',res.data)
+            if(res.data.deletedCount > 0){
+                Swal.fire({
+                    position:"top-center",
+                    icon: "success",
+                    title: "Task Delete Successful",
+                    showConfirmButton: false,
+                    timer: 1500
+                  });
+                refetch()
             }
-        });
-        //  axiosSecure.delete(`/taskDelete/${id}`)
-        //  .then(res=>{
-        //     console.log('delete',res.data)
-        //     if(res.data.deletedCount > 0){
-        //         Swal.fire({
-        //             position:"top-center",
-        //             icon: "success",
-        //             title: "Task Delete Successful",
-        //             showConfirmButton: false,
-        //             timer: 1500
-        //           });
-        //         refetch()
-        //     }
-        // })
+        })
     }
 
     // console.log('stateid', editId)

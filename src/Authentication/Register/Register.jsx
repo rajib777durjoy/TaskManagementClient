@@ -16,7 +16,10 @@ const Register = () => {
         createUser(data.email,data.password)
         .then(res=>{
             // console.log(res.user)
-            navigateLayout('/layout')
+            if(res.user){
+                navigateLayout('/')
+            }
+            
         })
         .catch(err=>{
             // console.log('error',err)

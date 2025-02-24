@@ -17,7 +17,10 @@ const Login = () => {
         console.log(data.email, data.password)
         loginUser(data.email, data.password)
             .then(res => {
-                navigateHome('/')
+                if(res.user){
+                    navigateHome('/')
+                }
+              
                 console.log(res.user)
             })
             .catch(err => {
@@ -27,7 +30,7 @@ const Login = () => {
     const handelGoogle=()=>{
         google()
        .then((res)=>{
-        navigateHome('/layout')
+        navigateHome('/')
          console.log('res-user',res.user)
        })
    }
